@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AppCard > renders correctly without link and onClick (baseline + snapshot) 1`] = `
+<DocumentFragment>
+  <div
+    class="MuiBox-root MuiBox-root css-99hdqx"
+    data-testid="app-card"
+  >
+    Hello
+  </div>
+</DocumentFragment>
+`;
