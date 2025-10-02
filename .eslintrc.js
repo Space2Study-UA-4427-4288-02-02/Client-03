@@ -93,6 +93,14 @@ module.exports = {
       env: {
         jest: true
       }
+    },
+    {
+      files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**/*.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off'
+      }
     }
   ]
 }
