@@ -35,6 +35,7 @@ const WhatCanYouDo = () => {
     <InfoCard
       action={() => {}}
       actionLabel={t(item.actionLabel)}
+      actionType={t(item.actionType)}
       cardWidth={460}
       description={t(item.description)}
       img={item.img}
