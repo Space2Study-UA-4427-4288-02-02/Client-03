@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './SignupPopup.styles'
+import { useSignUpMutation } from '~/services/auth-service'
+import { useModalContext } from '~/context/modal-context'
+import { useSnackBarContext } from '~/context/snackbar-context'
 
 import ImgTutor from '~/assets/img/signup-dialog/tutor.svg'
 import ImgStudent from '~/assets/img/signup-dialog/student.svg'
@@ -22,6 +25,7 @@ import {
   Google,
   InfoOutlined
 } from '@mui/icons-material'
+import { snackbarVariants } from '~/constants'
 
 const NAME_REGEX =
   /^[A-Za-zА-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?: [A-Za-zА-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)?$/u
@@ -95,6 +99,10 @@ export default function SignupPopup({ role }) {
   const [showConfirm, setShowConfirm] = useState(false)
   const [accepted, setAccepted] = useState(false)
 
+  const { closeModal } = useModalContext()
+  const { setAlert } = useSnackBarContext()
+  const [signUp] = useSignUpMutation()
+
   const [values, setValues] = useState({
     firstName: '',
     lastName: '',
@@ -123,7 +131,7 @@ export default function SignupPopup({ role }) {
 
   const onBlur = (name) => () => setTouched((p) => ({ ...p, [name]: true }))
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     setTouched({
       firstName: true,
@@ -132,6 +140,18 @@ export default function SignupPopup({ role }) {
       password: true,
       confirmPassword: true
     })
+    try {
+      await signUp({
+        ...values,
+        role
+      }).unwrap()
+      closeModal()
+    } catch (e) {
+      setAlert({
+        severity: snackbarVariants.error,
+        message: `errors.${e.data.code}`
+      })
+    }
   }
 
   return (
