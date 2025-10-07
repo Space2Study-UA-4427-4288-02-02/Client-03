@@ -1,0 +1,11 @@
+{
+  "empty": "This field cannot be empty",
+  "firstTooLong": "First name cannot be longer than 30 characters",
+  "lastTooLong": "Last name cannot be longer than 30 characters",
+  "firstLettersOnly": "First name can contain alphabetic characters only",
+  "lastLettersOnly": "Last name can contain alphabetic characters only",
+  "emailFormat": "Email should be of the following format: “local-part@domain.com\"",
+  "passworfLength": "Password cannot be shorter than 8 and longer than 25 characters",
+  "passwordCombo": "Password must contain at least one alphabetic and one numeric character",
+  "passwordMatch": "Passwords do not match"
+}
