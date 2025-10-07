@@ -14,16 +14,16 @@ const GeneralInfoStep = ({ btnsBox }) => {
   const { data, errors } = stepData['generalInfo']
 
   const countriesList = [
-    { name: 'Ukraine', code: 'UA' },
-    { name: 'Poland', code: 'PL' },
-    { name: 'Germany', code: 'DE' },
-    { name: 'France', code: 'FR' },
-    { name: 'Italy', code: 'IT' },
-    { name: 'Spain', code: 'ES' },
-    { name: 'United Kingdom', code: 'GB' },
-    { name: 'United States', code: 'US' },
-    { name: 'Canada', code: 'CA' },
-    { name: 'Australia', code: 'AU' }
+    { name: 'Ukraine' },
+    { name: 'Poland' },
+    { name: 'Germany' },
+    { name: 'France' },
+    { name: 'Italy' },
+    { name: 'Spain' },
+    { name: 'United Kingdom' },
+    { name: 'United States' },
+    { name: 'Canada' },
+    { name: 'Australia' }
   ]
 
   const citiesByCountry = {
@@ -53,7 +53,7 @@ const GeneralInfoStep = ({ btnsBox }) => {
       country: newValue,
       city: null
     }
-    handleStepData('general', updatedData, errors)
+    handleStepData('generalInfo', updatedData, errors)
   }
 
   const handleCityChange = (event, newValue) => {
@@ -61,7 +61,7 @@ const GeneralInfoStep = ({ btnsBox }) => {
       ...data,
       city: newValue
     }
-    handleStepData('general', updatedData, errors)
+    handleStepData('generalInfo', updatedData, errors)
   }
 
   const handleInputChange = (field) => (event) => {
@@ -69,7 +69,7 @@ const GeneralInfoStep = ({ btnsBox }) => {
       ...data,
       [field]: event.target.value
     }
-    handleStepData('general', updatedData, errors)
+    handleStepData('generalInfo', updatedData, errors)
   }
 
   return (
@@ -100,6 +100,9 @@ const GeneralInfoStep = ({ btnsBox }) => {
           <Box sx={styles.selectCountryRow}>
             <AppAutoComplete
               getOptionLabel={(option) => option?.name || ''}
+              isOptionEqualToValue={(option, value) =>
+                option?.name === value?.name
+              }
               onChange={handleCountryChange}
               options={countriesList}
               textFieldProps={{
@@ -111,6 +114,9 @@ const GeneralInfoStep = ({ btnsBox }) => {
             <AppAutoComplete
               disabled={!data.country}
               getOptionLabel={(option) => option?.name || ''}
+              isOptionEqualToValue={(option, value) =>
+                option?.name === value?.name
+              }
               onChange={handleCityChange}
               options={availableCities}
               textFieldProps={{
