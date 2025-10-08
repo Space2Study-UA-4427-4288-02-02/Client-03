@@ -5,6 +5,10 @@ import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
 import AppAutoComplete from '~/components/app-auto-complete/AppAutoComplete'
 import AppTextArea from '~/components/app-text-area/AppTextArea'
+import {
+  citiesByCountry,
+  countriesList
+} from '~/services/countries-cities-service'
 import img from '~/assets/img/tutor-home-page/become-tutor/general-info.svg'
 import { styles } from '~/containers/tutor-home-page/general-info-step/GeneralInfoStep.styles'
 
@@ -12,34 +16,6 @@ const GeneralInfoStep = ({ btnsBox }) => {
   const { t } = useTranslation()
   const { stepData, handleStepData } = useStepContext()
   const { data, errors } = stepData['generalInfo']
-
-  const countriesList = [
-    { name: 'Ukraine' },
-    { name: 'Poland' },
-    { name: 'Germany' },
-    { name: 'France' },
-    { name: 'Italy' },
-    { name: 'Spain' },
-    { name: 'United Kingdom' },
-    { name: 'United States' },
-    { name: 'Canada' },
-    { name: 'Australia' }
-  ]
-
-  const citiesByCountry = {
-    Ukraine: ['Kyiv', 'Lviv', 'Odesa', 'Kharkiv', 'Dnipro', 'Zaporizhzhia'],
-    Poland: ['Warsaw', 'Krakow', 'Gdansk', 'Wroclaw', 'Poznan'],
-    Germany: ['Berlin', 'Munich', 'Hamburg', 'Cologne', 'Frankfurt'],
-    France: ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice'],
-    'United States': [
-      'New York',
-      'Los Angeles',
-      'Chicago',
-      'Houston',
-      'Phoenix'
-    ],
-    Canada: ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa']
-  }
 
   const availableCities = data.country
     ? (citiesByCountry[data.country.name] || []).map((city) => ({
@@ -65,9 +41,11 @@ const GeneralInfoStep = ({ btnsBox }) => {
   }
 
   const handleInputChange = (field) => (event) => {
+    const value = event.target.value
+
     const updatedData = {
       ...data,
-      [field]: event.target.value
+      [field]: value
     }
     handleStepData('generalInfo', updatedData, errors)
   }
