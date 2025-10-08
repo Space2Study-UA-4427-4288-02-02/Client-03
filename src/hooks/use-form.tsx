@@ -45,15 +45,12 @@ export const useForm = <T extends object>({
     getEmptyValues(initialValues, false)
   )
 
-  const isFilled = (() => {
-    const hasFieldsFilled = Object.values(data).every((value) => {
-      if (typeof value === 'string') {
-        return value.trim() !== ''
-      }
-      return Boolean(value)
-    })
-    return hasFieldsFilled
-  })()
+  const isFilled = Object.values(data).every((value) => {
+    if (typeof value === 'string') {
+      return value.trim() !== ''
+    }
+    return Boolean(value)
+  })
 
   const validateValue = (key: keyof T, value: T[keyof T] | string) => {
     if (validations && validations[key]) {
