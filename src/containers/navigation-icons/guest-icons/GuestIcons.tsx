@@ -2,7 +2,6 @@ import { FC, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
-import UserStepsWrapper from '~/components/user-steps-wrapper/UserStepsWrapper'
 import LoginDialog from '~/containers/guest-home-page/login-dialog/LoginDialog'
 import AppButton from '~/components/app-button/AppButton'
 import NavigationIcon from '~/components/navigation-icon/NavigationIcon'
@@ -23,12 +22,6 @@ const GuestIcons: FC<GuestIconsProps> = ({ setSidebarOpen }) => {
     openModal({ component: <LoginDialog /> })
   }, [openModal])
 
-  const openStepperDialog = useCallback(() => {
-    openModal({
-      component: <UserStepsWrapper userRole='tutor' />
-    })
-  }, [openModal])
-
   const icons = guestIcons.map(
     (item) =>
       !item.disabled && (
@@ -44,13 +37,6 @@ const GuestIcons: FC<GuestIconsProps> = ({ setSidebarOpen }) => {
   return (
     <Box sx={styles.iconBox}>
       {icons}
-      <AppButton
-        onClick={openStepperDialog}
-        size={SizeEnum.Medium}
-        sx={styles.loginButton}
-      >
-        Stepper Test
-      </AppButton>
       <AppButton
         onClick={openLoginDialog}
         size={SizeEnum.Medium}
