@@ -17,7 +17,8 @@ const LoginForm = ({
   handleChange,
   handleBlur,
   data,
-  errors
+  errors,
+  isFilled
 }) => {
   const { inputVisibility: passwordVisibility, showInputText: showPassword } =
     useInputVisibility(errors.password)
@@ -27,8 +28,6 @@ const LoginForm = ({
   const { openModal } = useModalContext()
 
   const { t } = useTranslation()
-
-  const isFormFilled = data.email.trim() !== '' && data.password.trim() !== ''
 
   const openForgotPassword = () => {
     openModal({ component: <ForgotPassword /> })
@@ -73,7 +72,7 @@ const LoginForm = ({
       </Typography>
 
       <AppButton
-        disabled={!isFormFilled}
+        disabled={!isFilled}
         loading={authLoading}
         sx={styles.loginButton}
         type='submit'

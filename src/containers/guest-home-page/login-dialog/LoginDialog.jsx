@@ -20,23 +20,28 @@ const LoginDialog = () => {
   const { setAlert } = useSnackBarContext()
   const [loginUser] = useLoginMutation()
 
-  const { handleSubmit, handleInputChange, handleBlur, data, errors } = useForm(
-    {
-      onSubmit: async () => {
-        try {
-          await loginUser(data).unwrap()
-          closeModal()
-        } catch (e) {
-          setAlert({
-            severity: snackbarVariants.error,
-            message: `errors.${e.data.code}`
-          })
-        }
-      },
-      initialValues: { email: '', password: '' },
-      validations: { email }
-    }
-  )
+  const {
+    handleSubmit,
+    handleInputChange,
+    handleBlur,
+    data,
+    errors,
+    isFilled
+  } = useForm({
+    onSubmit: async () => {
+      try {
+        await loginUser(data).unwrap()
+        closeModal()
+      } catch (e) {
+        setAlert({
+          severity: snackbarVariants.error,
+          message: `errors.${e.data.code}`
+        })
+      }
+    },
+    initialValues: { email: '', password: '' },
+    validations: { email }
+  })
 
   return (
     <Box sx={styles.root}>
@@ -55,6 +60,7 @@ const LoginDialog = () => {
             handleBlur={handleBlur}
             handleChange={handleInputChange}
             handleSubmit={handleSubmit}
+            isFilled={isFilled}
           />
           <GoogleLogin buttonWidth={styles.form.maxWidth} type={login} />
         </Box>

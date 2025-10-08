@@ -15,6 +15,7 @@ interface UseFormProps<T> {
 interface UseFormOutput<T> {
   data: T
   isDirty: boolean
+  isFilled: boolean
   errors: { [K in keyof T]: string }
   handleInputChange: (
     key: keyof T
@@ -43,6 +44,16 @@ export const useForm = <T extends object>({
   const [isTouched, setTouched] = useState<{ [K in keyof T]: boolean }>(
     getEmptyValues(initialValues, false)
   )
+
+  const isFilled = (() => {
+    const hasFieldsFilled = Object.values(data).every((value) => {
+      if (typeof value === 'string') {
+        return value.trim() !== ''
+      }
+      return Boolean(value)
+    })
+    return hasFieldsFilled
+  })()
 
   const validateValue = (key: keyof T, value: T[keyof T] | string) => {
     if (validations && validations[key]) {
@@ -163,6 +174,7 @@ export const useForm = <T extends object>({
   return {
     data,
     isDirty,
+    isFilled,
     errors,
     handleDataChange,
     handleInputChange,
