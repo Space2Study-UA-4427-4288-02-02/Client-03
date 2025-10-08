@@ -25,6 +25,7 @@ describe('Login form test', () => {
         handleBlur={handleBlur}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
+        isFilled
       />,
       { preloadedState }
     )
@@ -94,6 +95,7 @@ describe('Login form test with loading', () => {
         handleBlur={handleBlur}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
+        isFilled
       />,
       { preloadedState }
     )
