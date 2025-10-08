@@ -54,7 +54,12 @@ export const authService = appApi.injectEndpoints({
       }
     }),
     googleAuth: build.mutation<LoginResponse, GoogleAuthParams>({
-      query: (body) => ({ url: URLs.auth.googleAuth, method: POST, body }),
+      query: (credentials) => ({
+        url: URLs.auth.googleAuth,
+        method: POST,
+        body: credentials,
+        data: credentials
+      }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled

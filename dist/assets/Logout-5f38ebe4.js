@@ -1,0 +1,1 @@
+import{V as e,X as u,r as a,y as r}from"./index-48abb1bb.js";const c=()=>{const t=e(),[o]=u(),s=a.useCallback(async()=>{await o(),t(r.home.route)},[o,t]);return a.useEffect(()=>{s()},[s]),null};export{c as default};

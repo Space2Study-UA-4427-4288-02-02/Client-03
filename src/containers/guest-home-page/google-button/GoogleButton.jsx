@@ -18,16 +18,17 @@ const GoogleButton = ({ role, route, buttonWidth, type }) => {
   const [googleAuth] = useGoogleAuthMutation()
 
   const handleCredentialResponse = useCallback(
-    async (token) => {
+    async (response) => {
       try {
-        await googleAuth({ token, role }).unwrap()
+        const token = response.credential
+        await googleAuth({ idToken: token, role }).unwrap()
         closeModal()
       } catch (e) {
         setAlert({
           severity: snackbarVariants.error,
-          message: `errors.${e.data.code}`
+          message: `errors.${e?.data?.code || 'UNKNOWN_ERROR'}`
         })
-        if (e.data.code === 'USER_NOT_FOUND') {
+        if (e?.data?.code === 'USER_NOT_FOUND') {
           closeModal()
           scrollToHash(ref)
         }
@@ -37,10 +38,10 @@ const GoogleButton = ({ role, route, buttonWidth, type }) => {
   )
 
   useEffect(() => {
-    const googleId = window.google.accounts.id
+    const googleId = google.accounts.id
 
     googleId.initialize({
-      client_id: import.meta.env.VITE_GMAIL_CLIENT_ID,
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: handleCredentialResponse
     })
 

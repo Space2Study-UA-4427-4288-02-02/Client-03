@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import svgrPlugin from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import eslintPlugin from 'vite-plugin-eslint'
-
 import path from 'path'
 
 export default defineConfig({
@@ -19,7 +18,13 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    host: true
+    host: true,
+    proxy: {
+      '/auth': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      }
+    }
   },
   esbuild: {
     loader: 'tsx'

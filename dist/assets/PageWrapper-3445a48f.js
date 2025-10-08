@@ -1,0 +1,1 @@
+import{r as s,m as n,j as x,Y as c,ag as l}from"./index-48abb1bb.js";const p={container:{flex:1,display:"flex",flexDirection:"column",mb:"100px"}},i=({children:r,sx:t,...a},o)=>{const{closeModal:e}=n();return s.useEffect(()=>()=>e(),[e]),x.jsx(c,{maxWidth:"xl",ref:o,sx:l(p.container,t),...a,children:r})},m=s.forwardRef(i);export{m as P};

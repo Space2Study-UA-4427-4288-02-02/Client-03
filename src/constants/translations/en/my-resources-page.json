@@ -16,8 +16,8 @@
     "confirmDeletionTitle": "Do you confirm question deletion?",
     "successDeletion": "Question was deleted successfully",
     "successDuplication": "Question was successfully duplicated",
-    "successEditedQuestion":"Question was successfully edited",
-    "successAddedQuestion":"Question was successfully added"
+    "successEditedQuestion": "Question was successfully edited",
+    "successAddedQuestion": "Question was successfully added"
   },
   "categories": {
     "category": "Category",

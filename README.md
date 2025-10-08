@@ -23,10 +23,10 @@ SpaceToStudy project is a platform where experts in various fields share their k
 - [Contributing](#contributing)
   - [git flow](#git-flow)
   - [issue flow](#git-flow)
-- [Teams](#teams) 
-  - [Development team](#development-team) 
-  - [DevOps team](#devops-team) 
-  - [Designer team](#designer-team) 
+- [Teams](#teams)
+  - [Development team](#development-team)
+  - [DevOps team](#devops-team)
+  - [Designer team](#designer-team)
   - [BA team](#ba-team)
   - [QC team](#qc-team)
 - [FAQ](#faq)
@@ -57,11 +57,10 @@ $ npm install
 ### How to run local
 
 1. Open terminal.
-2. Run `npm run start` to start application.<sup>[*](#footnote)</sup>
+2. Run `npm run start` to start application.<sup>[\*](#footnote)</sup>
 3. Open http://localhost:3000 to view it in the browser.
 
-###### <a name="footnote">*</a> - to run the project you need an `.env` file in root folder
-
+###### <a name="footnote">\*</a> - to run the project you need an `.env` file in root folder
 
 ## Usage
 
@@ -116,7 +115,9 @@ Order of testing components:
 - constants
 - static css styles
 - related components (test only one specific component at the specific moment of time)
+
 ##### How to test:
+
 - testing using snapshots (actual ui)
 - testing logic of component (dynamic)
 
@@ -252,6 +253,7 @@ Only the release should merge into the main branch!!!
 
 [![@AntonOkun](https://avatars.githubusercontent.com/u/129941062?v=4)](https://github.com/AntonOkun)
 [![@Valent1n0o](https://avatars.githubusercontent.com/u/118978192?v=4)](https://github.com/Valent1n0o)
+
 ---
 
 ## FAQ
