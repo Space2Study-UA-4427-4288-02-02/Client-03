@@ -1,4 +1,8 @@
+import { useCallback, useEffect } from 'react'
 import { useStepContext } from '~/context/step-context'
+import { useAppSelector } from '~/hooks/use-redux'
+import useAxios from '~/hooks/use-axios'
+import { userService } from '~/services/user-service'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +20,30 @@ const GeneralInfoStep = ({ btnsBox }) => {
   const { t } = useTranslation()
   const { stepData, handleStepData } = useStepContext()
   const { data, errors } = stepData['generalInfo']
+
+  const { userId, userRole } = useAppSelector((state) => state.appMain)
+
+  const getUserData = useCallback(
+    () => userService.getUserById(userId, userRole),
+    [userId, userRole]
+  )
+
+  const { response: userResponse } = useAxios({
+    service: getUserData,
+    fetchOnMount: true,
+    defaultResponse: null
+  })
+
+  useEffect(() => {
+    if (!userResponse) return
+
+    const updatedData = {
+      ...data,
+      firstName: userResponse.firstName ?? data.firstName,
+      lastName: userResponse.lastName ?? data.lastName
+    }
+    handleStepData('generalInfo', updatedData, errors)
+  }, [userResponse, data, errors, handleStepData])
 
   const availableCities = data.country
     ? (citiesByCountry[data.country.name] || []).map((city) => ({
