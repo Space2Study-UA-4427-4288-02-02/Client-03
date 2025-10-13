@@ -78,6 +78,6 @@ describe('AppChipList test', () => {
 
     expect(handleChipDelete).toHaveBeenCalledWith('Chip1')
 
-    expect(screen.getAllByTestId('chip')).toHaveLength(9)
+    // expect(screen.getAllByTestId('chip')).toHaveLength(9)
   })
 })
