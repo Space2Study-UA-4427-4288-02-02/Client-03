@@ -50,7 +50,7 @@ const GeneralInfoStep = ({ btnsBox }) => {
   const handleCountryChange = (event, newValue) => {
     const updatedData = {
       ...data,
-      country: newValue,
+      country: newValue.name,
       city: null
     }
     handleStepData('generalInfo', updatedData, errors)
