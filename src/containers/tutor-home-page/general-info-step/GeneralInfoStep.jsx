@@ -7,7 +7,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
-// import AppAutoComplete from '~/components/app-auto-complete/AppAutoComplete'
 import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 import AppTextArea from '~/components/app-text-area/AppTextArea'
 import {
@@ -39,18 +38,20 @@ const GeneralInfoStep = ({ btnsBox }) => {
   useEffect(() => {
     if (!userResponse) return
 
-    const updatedData = {
-      ...data,
-      firstName: userResponse.firstName ?? data.firstName,
-      lastName: userResponse.lastName ?? data.lastName
+    if (!data.firstName && !data.lastName) {
+      const updatedData = {
+        ...data,
+        firstName: userResponse.firstName ?? data.firstName,
+        lastName: userResponse.lastName ?? data.lastName
+      }
+      handleStepData('generalInfo', updatedData, errors)
     }
-    handleStepData('generalInfo', updatedData, errors)
-  }, [userResponse])
+  }, [userResponse, data, errors, handleStepData])
 
   const handleCountryChange = (event, newValue) => {
     const updatedData = {
       ...data,
-      country: newValue.name,
+      country: newValue,
       city: null
     }
     handleStepData('generalInfo', updatedData, errors)
