@@ -1,12 +1,114 @@
-import { Box } from '@mui/material'
-
+import { useState, useRef } from 'react'
+import { useSelector } from 'react-redux'
+import { Box, Typography, Button } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import DoneIcon from '@mui/icons-material/Done'
 import { style } from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep.style'
+import { translationKey } from 'containers/tutor-home-page/add-photo-step/constants'
+
+import axios from 'axios'
 
 const AddPhotoStep = ({ btnsBox }) => {
+  const { t } = useTranslation()
+  const [preview, setPreview] = useState(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef(null)
+  const userId = useSelector((state) => state.appMain.userId)
+
+  const uploadImage = async (file) => {
+    const formData = new FormData()
+    formData.append('image', file)
+    await axios.patch(
+      `${import.meta.env.VITE_API_BASE_PATH}/users/${userId}/uploadPhoto`,
+      formData,
+      {
+        withCredentials: true
+      }
+    )
+  }
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const previewUrl = URL.createObjectURL(file)
+      setPreview(previewUrl)
+      uploadImage(file)
+    }
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) {
+      const previewUrl = URL.createObjectURL(file)
+      setPreview(previewUrl)
+    }
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = () => {
+    setIsDragging(false)
+  }
   return (
     <Box sx={style.root}>
-      AddPhoto step
-      {btnsBox}
+      <input
+        accept='image/*'
+        hidden
+        onChange={handleFileChange}
+        ref={fileInputRef}
+        type='file'
+      />
+      <Box
+        sx={{ ...style.imgContainer, ...(isDragging ? style.activeDrag : {}) }}
+      >
+        {preview ? (
+          <img
+            alt={t(`${translationKey}.imageAlt`)}
+            onClick={() => fileInputRef.current.click()}
+            src={preview}
+            style={style.img}
+          />
+        ) : (
+          <Box
+            onClick={() => fileInputRef.current.click()}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            sx={{ ...style.uploadBox, ...(isDragging ? style.activeDrag : {}) }}
+          >
+            <Typography>{t(`${translationKey}.placeholder`)}</Typography>
+          </Box>
+        )}
+      </Box>
+
+      <Box sx={style.rigthBox}>
+        <Box>
+          <Typography sx={style.description}>
+            {t(`${translationKey}.description`)}
+          </Typography>
+
+          <Box style={style.uploadButtonWrapper}>
+            <Button
+              onClick={() => fileInputRef.current.click()}
+              startIcon={<CloudUploadIcon />}
+              sx={style.fileUploader.root}
+            >
+              {t(`${translationKey}.button`)}
+            </Button>
+
+            <Typography variant='caption'>Maximum file size - 10 Mb</Typography>
+
+            {preview && <DoneIcon color='success' style={style.doneIcon} />}
+          </Box>
+        </Box>
+
+        <Box>{btnsBox}</Box>
+      </Box>
     </Box>
   )
 }
