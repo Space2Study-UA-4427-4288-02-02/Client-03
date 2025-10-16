@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { Box, Typography, Button } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
@@ -8,38 +7,23 @@ import { style } from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep.
 import { translationKey } from 'containers/tutor-home-page/add-photo-step/constants'
 import { useStepContext } from '~/context/step-context'
 
-import axios from 'axios'
-
 const AddPhotoStep = ({ btnsBox }) => {
   const { stepData, handleStepData } = useStepContext()
   const data = stepData['photo']
   useEffect(() => {
-    if (data) setPreview(data)
+    if (data) setPreview(URL.createObjectURL(data))
   }, [data])
   const { t } = useTranslation()
   const [preview, setPreview] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef(null)
-  const userId = useSelector((state) => state.appMain.userId)
 
-  const uploadImage = async (file) => {
-    const formData = new FormData()
-    formData.append('image', file)
-    await axios.patch(
-      `${import.meta.env.VITE_API_BASE_PATH}/users/${userId}/uploadPhoto`,
-      formData,
-      {
-        withCredentials: true
-      }
-    )
-  }
   const handleFileChange = (e) => {
     const file = e.target.files[0]
     if (file) {
       const previewUrl = URL.createObjectURL(file)
       setPreview(previewUrl)
-      uploadImage(file)
-      handleStepData('photo', previewUrl)
+      handleStepData('photo', file)
     }
   }
 

@@ -7,6 +7,7 @@ import { useModalContext } from '~/context/modal-context'
 import { useStepContext } from '~/context/step-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
 import { userService } from '~/services/user-service'
+import uploadImage from '~/services/upload-photo'
 import { snackbarVariants } from '~/constants'
 
 const useSteps = ({ steps }) => {
@@ -66,7 +67,7 @@ const useSteps = ({ steps }) => {
       stepData.generalInfo.data
 
     const data = {
-      photo: stepData.photo[0] ? stepData.photo[0] : '',
+      photo: stepData.photo ? stepData.photo : '',
       firstName,
       lastName,
       address: {
@@ -77,6 +78,7 @@ const useSteps = ({ steps }) => {
       mainSubjects: stepData.subjects,
       nativeLanguage: stepData.language ?? ''
     }
+    uploadImage(stepData.photo, userId)
 
     !hasErrors && fetchData(data)
   }
