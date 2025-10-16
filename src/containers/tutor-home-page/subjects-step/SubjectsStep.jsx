@@ -18,12 +18,11 @@ const SubjectsStep = ({ btnsBox }) => {
   const { stepData, handleStepData } = useStepContext()
 
   const ctx = stepData?.[STEP_KEY]
-  const data = ctx?.data ?? { category: null, subjects: null }
-  const errors = ctx?.errors ?? {}
-
   useEffect(() => {
+    const data = ctx?.data ?? { category: null, subjects: null }
+    const errors = ctx?.errors ?? {}
     if (!ctx) handleStepData(STEP_KEY, data, errors)
-  }, [])
+  }, [ctx ])
 
   const [categoriesOptions, setCategoriesOptions] = useState([])
   const [subjectsOptions, setSubjectsOptions] = useState([])
