@@ -4,12 +4,18 @@ import { useTranslation } from 'react-i18next'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import DoneIcon from '@mui/icons-material/Done'
 import { style } from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep.style'
-import { translationKey } from 'containers/tutor-home-page/add-photo-step/constants'
+import {
+  translationKey,
+  validationData
+} from 'containers/tutor-home-page/add-photo-step/constants'
 import { useStepContext } from '~/context/step-context'
+import { useSnackBarContext } from '~/context/snackbar-context'
+import { snackbarVariants } from '~/constants'
 
 const AddPhotoStep = ({ btnsBox }) => {
   const { stepData, handleStepData } = useStepContext()
   const data = stepData['photo']
+  const { setAlert } = useSnackBarContext()
   useEffect(() => {
     if (data) setPreview(URL.createObjectURL(data))
   }, [data])
@@ -20,10 +26,18 @@ const AddPhotoStep = ({ btnsBox }) => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
-    if (file) {
+    if (!file) return
+
+    try {
+      validatePhoto(file)
       const previewUrl = URL.createObjectURL(file)
       setPreview(previewUrl)
       handleStepData('photo', file)
+    } catch (e) {
+      setAlert({
+        severity: snackbarVariants.error,
+        message: e.message
+      })
     }
   }
 
@@ -44,6 +58,15 @@ const AddPhotoStep = ({ btnsBox }) => {
 
   const handleDragLeave = () => {
     setIsDragging(false)
+  }
+  const validatePhoto = (file) => {
+    if (!validationData.filesTypes.includes(file.type)) {
+      throw new Error(t(validationData.typeError))
+    }
+
+    if (file.size > validationData.maxFileSize) {
+      throw new Error(t(validationData.fileSizeError))
+    }
   }
   return (
     <Box sx={style.root}>
