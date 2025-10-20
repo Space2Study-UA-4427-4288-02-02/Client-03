@@ -9,6 +9,7 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import MenuItem from '@mui/material/MenuItem'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import LanguageSwitcher from '~/components/language-switcher/LanguageSwitcher'
 
 import HashLink from '~/components/hash-link/HashLink'
 import Logo from '~/containers/logo/Logo'
@@ -111,7 +112,10 @@ const Navbar = () => {
       </Button>
       {renderMenu(findOffersMenu, { autoFocus: false })}
       <List sx={styles.navList}>{navigationList}</List>
-      <NavigationIcons setSidebarOpen={handleOpenSidebar} />
+      <Box sx={styles.icons}>
+        <LanguageSwitcher />
+        <NavigationIcons setSidebarOpen={handleOpenSidebar} />
+      </Box>
       <AppDrawer onClose={closeDrawer} open={isOpen}>
         <Sidebar
           accountItems={accountItems}
