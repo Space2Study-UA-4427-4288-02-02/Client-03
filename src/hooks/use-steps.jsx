@@ -71,7 +71,7 @@ const useSteps = ({ steps }) => {
       firstName,
       lastName,
       address: {
-        country: country ?? '',
+        country: country?.name ?? '',
         city: city ?? ''
       },
       professionalSummary: professionalSummary,

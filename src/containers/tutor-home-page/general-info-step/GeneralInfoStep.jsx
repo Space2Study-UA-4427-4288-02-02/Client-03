@@ -7,12 +7,13 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import AppTextField from '~/components/app-text-field/AppTextField'
-import AppAutoComplete from '~/components/app-auto-complete/AppAutoComplete'
+import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 import AppTextArea from '~/components/app-text-area/AppTextArea'
 import {
-  citiesByCountry,
-  countriesList
+  getCountries,
+  getCitiesByCountry
 } from '~/services/countries-cities-service'
+import { validations as stepValidations } from '~/components/user-steps-wrapper/constants'
 import img from '~/assets/img/tutor-home-page/become-tutor/general-info.svg'
 import { styles } from '~/containers/tutor-home-page/general-info-step/GeneralInfoStep.styles'
 
@@ -37,19 +38,15 @@ const GeneralInfoStep = ({ btnsBox }) => {
   useEffect(() => {
     if (!userResponse) return
 
-    const updatedData = {
-      ...data,
-      firstName: userResponse.firstName ?? data.firstName,
-      lastName: userResponse.lastName ?? data.lastName
+    if (!data.firstName && !data.lastName) {
+      const updatedData = {
+        ...data,
+        firstName: userResponse.firstName ?? data.firstName,
+        lastName: userResponse.lastName ?? data.lastName
+      }
+      handleStepData('generalInfo', updatedData, errors)
     }
-    handleStepData('generalInfo', updatedData, errors)
   }, [userResponse, data, errors, handleStepData])
-
-  const availableCities = data.country
-    ? (citiesByCountry[data.country.name] || []).map((city) => ({
-        name: city
-      }))
-    : []
 
   const handleCountryChange = (event, newValue) => {
     const updatedData = {
@@ -68,6 +65,12 @@ const GeneralInfoStep = ({ btnsBox }) => {
     handleStepData('generalInfo', updatedData, errors)
   }
 
+  const runValidation = (field, value) => {
+    if (!stepValidations || !stepValidations[field]) return ''
+    const res = t(stepValidations[field](value))
+    return res ?? ''
+  }
+
   const handleInputChange = (field) => (event) => {
     const value = event.target.value
 
@@ -75,7 +78,12 @@ const GeneralInfoStep = ({ btnsBox }) => {
       ...data,
       [field]: value
     }
-    handleStepData('generalInfo', updatedData, errors)
+
+    const newErrors = {
+      ...errors,
+      [field]: runValidation(field, value)
+    }
+    handleStepData('generalInfo', updatedData, newErrors)
   }
 
   return (
@@ -91,12 +99,14 @@ const GeneralInfoStep = ({ btnsBox }) => {
           <Box sx={styles.nameFieldsRow}>
             <AppTextField
               autoFocus
+              errorMsg={errors.firstName}
               label={t('common.labels.firstName')}
               onChange={handleInputChange('firstName')}
               required
               value={data.firstName}
             />
             <AppTextField
+              errorMsg={errors.lastName}
               label={t('common.labels.lastName')}
               onChange={handleInputChange('lastName')}
               required
@@ -104,27 +114,23 @@ const GeneralInfoStep = ({ btnsBox }) => {
             />
           </Box>
           <Box sx={styles.selectCountryRow}>
-            <AppAutoComplete
-              getOptionLabel={(option) => option?.name || ''}
-              isOptionEqualToValue={(option, value) =>
-                option?.name === value?.name
-              }
+            <AsyncAutocomplete
+              labelField='name'
               onChange={handleCountryChange}
-              options={countriesList}
+              service={getCountries}
               textFieldProps={{
                 label: t('common.labels.country'),
                 required: false
               }}
               value={data.country}
             />
-            <AppAutoComplete
+            <AsyncAutocomplete
               disabled={!data.country}
-              getOptionLabel={(option) => option?.name || ''}
-              isOptionEqualToValue={(option, value) =>
-                option?.name === value?.name
-              }
+              fetchCondition={data.country}
               onChange={handleCityChange}
-              options={availableCities}
+              service={() =>
+                getCitiesByCountry(data.country?.name ?? data.country)
+              }
               textFieldProps={{
                 label: t('common.labels.city'),
                 required: false
@@ -133,6 +139,7 @@ const GeneralInfoStep = ({ btnsBox }) => {
             />
           </Box>
           <AppTextArea
+            errorMsg={errors.professionalSummary}
             fullWidth
             label={t('becomeTutor.generalInfo.textFieldLabel')}
             maxLength={70}

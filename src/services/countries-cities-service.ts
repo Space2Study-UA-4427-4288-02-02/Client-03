@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios'
+
 export const countriesList = [
   { name: 'Ukraine' },
   { name: 'Poland' },
@@ -18,4 +20,25 @@ export const citiesByCountry = {
   France: ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice'],
   'United States': ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
   Canada: ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa']
+}
+
+const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms))
+
+export const getCountries = async (): Promise<
+  AxiosResponse<typeof countriesList>
+> => {
+  await delay()
+  return Promise.resolve({ data: countriesList } as AxiosResponse<
+    typeof countriesList
+  >)
+}
+
+export const getCitiesByCountry = async (
+  country: keyof typeof citiesByCountry
+): Promise<AxiosResponse<string[]>> => {
+  await delay()
+  const data = citiesByCountry[country] ?? []
+  return Promise.resolve({
+    data: data
+  } as AxiosResponse<string[]>)
 }
