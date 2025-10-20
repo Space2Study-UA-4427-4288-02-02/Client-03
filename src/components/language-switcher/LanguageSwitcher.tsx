@@ -53,7 +53,7 @@ const LanguageSwitcher: FC = () => {
           <MenuItem
             key={language.code}
             onClick={handleLanguageChange(language.code)}
-            selected={i18n.resolvedLanguage === language.code}
+            selected={i18n?.resolvedLanguage === language.code}
           >
             {language.label}
           </MenuItem>
