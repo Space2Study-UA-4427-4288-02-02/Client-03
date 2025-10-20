@@ -9,7 +9,7 @@ const StepProvider = ({ children, initialValues, stepLabels }) => {
   })
   const [subject, setSubject] = useState([])
   const [language, setLanguage] = useState(null)
-  const [photo, setPhoto] = useState([])
+  const [photo, setPhoto] = useState(null)
   const [generalLabel, subjectLabel, languageLabel, photoLabel] = stepLabels
 
   const stepData = {

@@ -7,3 +7,5 @@ export const validationData = {
   typeError: 'becomeTutor.photo.typeError',
   maxQuantityFiles: 1
 }
+
+export const translationKey = 'becomeTutor.photo'

@@ -56,13 +56,23 @@ export const style = {
     },
     root: {
       display: 'flex',
-      flexDirection: 'column',
       justifyContent: 'space-around',
       border: '1px solid',
       borderColor: 'primary.200',
       borderRadius: '5px',
       maxWidth: '270px',
-      overflow: 'auto'
+      overflow: 'auto',
+      p: '10px 20px',
+      margin: '10px 0'
     }
+  },
+  doneIcon: {
+    position: 'absolute',
+    right: -40,
+    bottom: 40
+  },
+  uploadButtonWrapper: {
+    position: 'relative',
+    width: 'fit-content'
   }
 }
