@@ -24,8 +24,7 @@ const AddPhotoStep = ({ btnsBox }) => {
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef(null)
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
+  const handleFileChange = (file) => {
     if (!file) return
 
     try {
@@ -41,14 +40,16 @@ const AddPhotoStep = ({ btnsBox }) => {
     }
   }
 
+  const handleInputChange = (e) => {
+    const file = e.target.files[0]
+    handleFileChange(file)
+  }
+
   const handleDrop = (e) => {
     e.preventDefault()
     setIsDragging(false)
     const file = e.dataTransfer.files[0]
-    if (file) {
-      const previewUrl = URL.createObjectURL(file)
-      setPreview(previewUrl)
-    }
+    handleFileChange(file)
   }
 
   const handleDragOver = (e) => {
@@ -73,7 +74,7 @@ const AddPhotoStep = ({ btnsBox }) => {
       <input
         accept='image/*'
         hidden
-        onChange={handleFileChange}
+        onChange={handleInputChange}
         ref={fileInputRef}
         type='file'
       />
