@@ -45,5 +45,9 @@ export const styles = {
     color: 'primary.900',
     fontWeight: '500',
     px: '4px'
+  },
+  icons: {
+    alignItems: 'center',
+    display: 'flex'
   }
 }
