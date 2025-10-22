@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import LanguageIcon from '@mui/icons-material/Language'
+import { setToLocalStorage } from '~/services/local-storage-service'
 import { styles } from './LanguageSwitcher.styles'
 
 const LanguagesList = [
@@ -25,8 +26,15 @@ const LanguageSwitcher: FC = () => {
   }
 
   const handleLanguageChange = (code: string) => () => {
-    void i18n.changeLanguage(code)
-    handleClose()
+    i18n
+      .changeLanguage(code)
+      .then(() => {
+        setToLocalStorage('language', code)
+        handleClose()
+      })
+      .catch((error) => {
+        console.error('Failed to change language:', error)
+      })
   }
 
   return (

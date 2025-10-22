@@ -1,10 +1,11 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import { getFromLocalStorage } from '~/services/local-storage-service'
 import resources from '~/constants/translations'
 
 void i18n.use(initReactI18next).init({
   resources,
-  lng: 'en',
+  lng: getFromLocalStorage('language') || 'en',
   ns: ['translations']
 })
 
