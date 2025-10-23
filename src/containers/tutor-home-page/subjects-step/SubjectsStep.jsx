@@ -13,6 +13,7 @@ import img from '~/assets/img/tutor-home-page/become-tutor/study-category.svg'
 import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.styles'
 
 const STEP_KEY = 'subjects'
+const MAX_VISIBLE_CHIPS = 3
 
 const getId = (x) => x?._id || x?.id || x?.value || null
 
@@ -21,19 +22,23 @@ const SubjectsStep = ({ btnsBox }) => {
   const { stepData, handleStepData } = useStepContext()
 
   const ctx = stepData?.[STEP_KEY]
-  const data = ctx?.data ?? { category: null, subjects: null }
+  const data = ctx?.data ?? {
+    category: null,
+    subjects: null,
+    selectedSubjects: []
+  }
   const errors = ctx?.errors ?? {}
 
   useEffect(() => {
     if (!ctx) handleStepData(STEP_KEY, data, errors)
-  }, [ctx])
+  }, [ctx, handleStepData])
 
   const [categoriesOptions, setCategoriesOptions] = useState([])
   const [subjectsOptions, setSubjectsOptions] = useState([])
   const [loadingCategories, setLoadingCategories] = useState(false)
   const [loadingSubjects, setLoadingSubjects] = useState(false)
 
-  const updateCategories = (patch) =>
+  const updateStep = (patch) =>
     handleStepData(STEP_KEY, { ...data, ...patch }, errors)
 
   const fetchCategories = async () => {
@@ -60,7 +65,7 @@ const SubjectsStep = ({ btnsBox }) => {
   }
 
   const changeCategory = (_, newValue) => {
-    updateCategories({
+    updateStep({
       category: newValue,
       subjects: null,
       selectedSubjects: []
@@ -74,23 +79,23 @@ const SubjectsStep = ({ btnsBox }) => {
     const id = getId(current)
     if (!id) return
 
-    const exist = data.selectedSubjects.some((s) => getId(s) === id)
+    const selected = data.selectedSubjects ?? []
+    const exist = selected.some((s) => getId(s) === id)
     if (exist) {
-      updateCategories({ subjects: null })
+      updateStep({ subjects: null })
       return
     }
 
-    updateCategories({
-      selectedSubjects: [...(data.selectedSubjects ?? []), current],
+    updateStep({
+      selectedSubjects: [...selected, current],
       subjects: null
     })
   }
 
   const removeChip = (id) => {
-    updateCategories({
-      selectedSubjects: (data.selectedSubjects ?? []).filter(
-        (s) => getId(s) !== id
-      )
+    const selected = data.selectedSubjects ?? []
+    updateStep({
+      selectedSubjects: selected.filter((s) => getId(s) !== id)
     })
   }
 
@@ -127,7 +132,7 @@ const SubjectsStep = ({ btnsBox }) => {
             clearOnEscape
             disabled={!data.category}
             loading={loadingSubjects}
-            onChange={(_, newValue) => updateCategories({ subjects: newValue })}
+            onChange={(_, newValue) => updateStep({ subjects: newValue })}
             onOpen={fetchSubjects}
             options={subjectsOptions}
             textFieldProps={{
@@ -148,7 +153,7 @@ const SubjectsStep = ({ btnsBox }) => {
 
           {!!data.selectedSubjects?.length && (
             <Stack sx={styles.chipWrap}>
-              {data.selectedSubjects.slice(0, 3).map((s) => {
+              {data.selectedSubjects.slice(0, MAX_VISIBLE_CHIPS).map((s) => {
                 const id = getId(s)
                 return (
                   <Chip
@@ -159,9 +164,9 @@ const SubjectsStep = ({ btnsBox }) => {
                   />
                 )
               })}
-              {data.selectedSubjects.length > 3 && (
+              {data.selectedSubjects.length > MAX_VISIBLE_CHIPS && (
                 <Chip
-                  label={`+${data.selectedSubjects.length - 3}`}
+                  label={`+${data.selectedSubjects.length - MAX_VISIBLE_CHIPS}`}
                   sx={styles.moreChip}
                 />
               )}
