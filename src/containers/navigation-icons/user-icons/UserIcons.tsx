@@ -11,7 +11,6 @@ import { useAppSelector } from '~/hooks/use-redux'
 import Avatar from '@mui/material/Avatar'
 import { userService } from '~/services/user-service'
 import useAxios from '~/hooks/use-axios'
-import { defaultResponses } from '~/constants'
 
 interface UserIconsProps {
   setSidebarOpen: () => void
@@ -29,7 +28,7 @@ const UserIcons: FC<UserIconsProps> = ({ setSidebarOpen }) => {
     const { loading, response } = useAxios({
       service: getUserData,
       fetchOnMount: true,
-      defaultResponse: defaultResponses.array
+      defaultResponse: null
     })
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
@@ -60,7 +59,7 @@ const UserIcons: FC<UserIconsProps> = ({ setSidebarOpen }) => {
       )
   )
 
-  function getUserIcon(user: any) {
+  function getUserIcon(user?: User) {
     if (!user) return null
     if (user.photo) return user.photo
 
