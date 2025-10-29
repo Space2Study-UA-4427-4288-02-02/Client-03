@@ -4,7 +4,7 @@ import { styles } from '~/containers/tutor-home-page/language-step/LanguageStep.
 import img from '~/assets/img/tutor-home-page/become-tutor/languages.svg'
 import { useTranslation } from 'react-i18next'
 import { useStepContext } from '~/context/step-context'
-import { LanguagesEnum } from '~/types'
+import { languages } from '~/constants'
 import AppAutoComplete from '~/components/app-auto-complete/AppAutoComplete'
 import Typography from '@mui/material/Typography'
 
@@ -28,7 +28,7 @@ const LanguageStep = ({ btnsBox }) => {
                 handleStepData('language', value)
               }
             }}
-            options={Object.values(LanguagesEnum)}
+            options={Object.values(languages)}
             textFieldProps={{
               label: t('becomeTutor.languages.autocompleteLabel'),
               fullWidth: true

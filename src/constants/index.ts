@@ -1,4 +1,5 @@
 import { AlertColor } from '@mui/material/Alert'
+import { LanguagesEnum } from '~/types'
 
 export const s2s = 's2s'
 
@@ -26,4 +27,14 @@ export const itemsLoadLimit = {
   tablet: 10,
   mobile: 6,
   default: 12
+}
+
+export const languages = {
+  [LanguagesEnum.English]: 'English',
+  [LanguagesEnum.Spanish]: 'Español',
+  [LanguagesEnum.French]: 'Français',
+  [LanguagesEnum.German]: 'Deutsch',
+  [LanguagesEnum.Ukrainian]: 'Українська',
+  [LanguagesEnum.Polish]: 'Polski',
+  [LanguagesEnum.Arabic]: 'العربية'
 }
