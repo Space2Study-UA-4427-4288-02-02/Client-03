@@ -1,4 +1,5 @@
 import { fadeAnimation } from '~/styles/app-theme/custom-animations'
+import palette from '~/styles/app-theme/app.pallete'
 
 export const styles = {
   container: {
@@ -39,5 +40,11 @@ export const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '16px'
+  },
+  addBtn: {
+    backgroundColor: palette.basic.grey,
+    fontSize: { xs: '14px', sm: '16px' },
+    lineHeight: { xs: '20px', sm: '24px' },
+    fontWeight: 500
   }
 }

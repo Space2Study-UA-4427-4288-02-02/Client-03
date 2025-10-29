@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
+import { Button, Stack, Chip } from '@mui/material'
 
 import AppAutoComplete from '~/components/app-auto-complete/AppAutoComplete'
 import { useStepContext } from '~/context/step-context'
@@ -12,24 +13,32 @@ import img from '~/assets/img/tutor-home-page/become-tutor/study-category.svg'
 import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.styles'
 
 const STEP_KEY = 'subjects'
+const MAX_VISIBLE_CHIPS = 3
+
+const getId = (x) => x?._id || x?.id || x?.value || null
 
 const SubjectsStep = ({ btnsBox }) => {
   const { t } = useTranslation()
   const { stepData, handleStepData } = useStepContext()
 
   const ctx = stepData?.[STEP_KEY]
+  const data = ctx?.data ?? {
+    category: null,
+    subjects: null,
+    selectedSubjects: []
+  }
+  const errors = ctx?.errors ?? {}
+
   useEffect(() => {
-    const data = ctx?.data ?? { category: null, subjects: null }
-    const errors = ctx?.errors ?? {}
     if (!ctx) handleStepData(STEP_KEY, data, errors)
-  }, [ctx ])
+  }, [ctx, handleStepData])
 
   const [categoriesOptions, setCategoriesOptions] = useState([])
   const [subjectsOptions, setSubjectsOptions] = useState([])
   const [loadingCategories, setLoadingCategories] = useState(false)
   const [loadingSubjects, setLoadingSubjects] = useState(false)
 
-  const updateCategories = (patch) =>
+  const updateStep = (patch) =>
     handleStepData(STEP_KEY, { ...data, ...patch }, errors)
 
   const fetchCategories = async () => {
@@ -56,9 +65,43 @@ const SubjectsStep = ({ btnsBox }) => {
   }
 
   const changeCategory = (_, newValue) => {
-    updateCategories({ category: newValue, subjects: null })
+    updateStep({
+      category: newValue,
+      subjects: null,
+      selectedSubjects: []
+    })
     setSubjectsOptions([])
   }
+
+  const addCurentSubjectAsChip = () => {
+    const current = data.subjects
+    if (!current) return
+    const id = getId(current)
+    if (!id) return
+
+    const selected = data.selectedSubjects ?? []
+    const exist = selected.some((s) => getId(s) === id)
+    if (exist) {
+      updateStep({ subjects: null })
+      return
+    }
+
+    updateStep({
+      selectedSubjects: [...selected, current],
+      subjects: null
+    })
+  }
+
+  const removeChip = (id) => {
+    const selected = data.selectedSubjects ?? []
+    updateStep({
+      selectedSubjects: selected.filter((s) => getId(s) !== id)
+    })
+  }
+
+  const canAdd =
+    !!data.subjects &&
+    !data.selectedSubjects?.some((s) => getId(s) === getId(data.subjects))
 
   return (
     <Box sx={styles.container}>
@@ -89,7 +132,7 @@ const SubjectsStep = ({ btnsBox }) => {
             clearOnEscape
             disabled={!data.category}
             loading={loadingSubjects}
-            onChange={(_, newValue) => updateCategories({ subjects: newValue })}
+            onChange={(_, newValue) => updateStep({ subjects: newValue })}
             onOpen={fetchSubjects}
             options={subjectsOptions}
             textFieldProps={{
@@ -98,6 +141,38 @@ const SubjectsStep = ({ btnsBox }) => {
             }}
             value={data.subjects}
           />
+
+          <Button
+            disabled={!canAdd}
+            onClick={addCurentSubjectAsChip}
+            sx={styles.addBtn}
+            type='button'
+          >
+            {t('becomeTutor.categories.btnText')}
+          </Button>
+
+          {!!data.selectedSubjects?.length && (
+            <Stack sx={styles.chipWrap}>
+              {data.selectedSubjects.slice(0, MAX_VISIBLE_CHIPS).map((s) => {
+                const id = getId(s)
+                return (
+                  <Chip
+                    key={id}
+                    label={s?.name ?? ''}
+                    onDelete={() => removeChip(id)}
+                    sx={styles.chip}
+                  />
+                )
+              })}
+              {data.selectedSubjects.length > MAX_VISIBLE_CHIPS && (
+                <Chip
+                  label={`+${data.selectedSubjects.length - MAX_VISIBLE_CHIPS}`}
+                  sx={styles.moreChip}
+                />
+              )}
+            </Stack>
+          )}
+
           {btnsBox}
         </Box>
       </Box>
