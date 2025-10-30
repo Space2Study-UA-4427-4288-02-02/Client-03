@@ -29,7 +29,7 @@ export const styles = {
 
   description: {
     color: '#546e7a',
-    letterSpacing: '25%',
+    letterSpacing: '0.25%',
     display: '-webkit-box',
     WebkitLineClamp: 5,
     WebkitBoxOrient: 'vertical',

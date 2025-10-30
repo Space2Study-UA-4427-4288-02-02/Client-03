@@ -8,12 +8,10 @@ export const transformOfferData = (offer: Offer): allOfferInfo => {
       offer.author.totalReviews.student + offer.author.totalReviews.tutor,
     offerTitle: offer.title,
     offerDescription: offer.description,
-    profficiencyLevel: offer.proficiencyLevel || [
-      ProficiencyLevelEnum.Beginner
-    ],
+    proficiencyLevel: offer.proficiencyLevel || [ProficiencyLevelEnum.Beginner],
     languages: offer.languages || [LanguagesEnum.English],
     subject: offer.subject.name,
-    profilePicture: offer.author.photo as string,
+    profilePicture: offer.author.photo || '',
     price: offer.price,
     totalRating: offer.author.averageRating.student || 0
   }

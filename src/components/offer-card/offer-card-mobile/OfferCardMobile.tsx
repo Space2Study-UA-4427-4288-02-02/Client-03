@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Box, Typography } from '@mui/material'
-import AppButton from '~/components//app-button/AppButton'
+import AppButton from '~/components/app-button/AppButton'
 import SubjectLevelChips from '~/components/subject-level-chips/SubjectLevelChips'
 import { useTranslation } from 'react-i18next'
 import AppCard from '~/components/app-card/AppCard'
@@ -49,7 +49,7 @@ const OfferCardMobile: FC<OfferCardDataProps> = ({ allInfo }) => {
 
         <Box sx={styles.chipsContainer}>
           <SubjectLevelChips
-            proficiencyLevel={allInfo.profficiencyLevel}
+            proficiencyLevel={allInfo.proficiencyLevel}
             subject={allInfo.subject}
           />
         </Box>

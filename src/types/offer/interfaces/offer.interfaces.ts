@@ -41,7 +41,7 @@ export interface allOfferInfo {
   reviewsQuantity: number
   offerTitle: string
   offerDescription: string
-  profficiencyLevel: ProficiencyLevelEnum[]
+  proficiencyLevel: ProficiencyLevelEnum[]
   languages: LanguagesEnum[]
   profilePicture: string
   subject: string
