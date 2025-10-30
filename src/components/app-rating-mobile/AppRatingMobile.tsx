@@ -44,7 +44,7 @@ const AppRatingMobile: FC<AppRatingMobileProps> = ({
         component={link ? HashLink : Typography}
         sx={spliceSx(styles.reviews, sx?.reviews)}
       >
-        {t('tutorProfilePage.reviews.reviewsCount', {
+        {t('tutorProfilePage.profileInfo.reviews', {
           count: reviewsCount
         })}
       </Typography>

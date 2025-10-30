@@ -29,7 +29,7 @@ const OfferCardMobile: FC<OfferCardDataProps> = ({ allInfo }) => {
         <Box sx={styles.authorsInfo}>
           <ClickableImage
             image={{
-              name: 'Avatar',
+              name: allInfo.authorName,
               path: allInfo.profilePicture || avatarImg
             }}
             sx={styles.photo}

@@ -14,7 +14,6 @@ export const styles = {
   },
   number: { display: 'flex', alignItems: 'center' },
   rating: {
-    // typography: TypographyVariantEnum.H6
     fontSize: '16px',
     lineHeight: '20px',
     fontWeight: 400,

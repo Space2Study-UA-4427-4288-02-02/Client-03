@@ -1,6 +1,6 @@
 export const styles = {
   card: {
-    padding: '31px 20px 31px 20px',
+    padding: '31px 20px',
     borderRadius: '6px',
     display: 'flex',
     gap: '50px',

@@ -27,7 +27,7 @@ const OfferCardLarge: FC<OfferCardDataProps> = ({ allInfo }) => {
       <Box sx={styles.authorSection}>
         <ClickableImage
           image={{
-            name: 'Avatar',
+            name: allInfo.authorName,
             path: allInfo.profilePicture || avatarImg
           }}
           style={styles.photo}
@@ -44,7 +44,7 @@ const OfferCardLarge: FC<OfferCardDataProps> = ({ allInfo }) => {
             value={allInfo.totalRating}
           />
           <Typography sx={styles.reviews} variant='caption'>
-            {`${allInfo.reviewsQuantity} reviews`}
+            {`${allInfo.reviewsQuantity} ${t('tutorProfilePage.profileInfo.reviews')}`}
           </Typography>
         </Box>
       </Box>
