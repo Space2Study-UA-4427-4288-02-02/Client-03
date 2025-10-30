@@ -29,6 +29,8 @@ export const itemsLoadLimit = {
   default: 12
 }
 
+export const supportedLanguages = ['en', 'ua']
+
 export const languages = {
   [LanguagesEnum.English]: 'English',
   [LanguagesEnum.Spanish]: 'Español',
