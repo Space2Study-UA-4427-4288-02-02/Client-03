@@ -16,6 +16,7 @@ import findOffers from './find-offer-page.json'
 import filters from './filters.json'
 import iconsTooltip from './icons-tooltip.json'
 import tutorHomePage from './tutor-home-page.json'
+import tutorProfilePage from './tutor-profile-page.json'
 import offerPage from './offer-page.json'
 import offerDetailsPage from './offer-details-page.json'
 import cooperationsPage from './cooperations-page.json'
@@ -50,6 +51,7 @@ const ua = {
     filters,
     iconsTooltip,
     tutorHomePage,
+    tutorProfilePage,
     offerPage,
     offerDetailsPage,
     cooperationsPage,

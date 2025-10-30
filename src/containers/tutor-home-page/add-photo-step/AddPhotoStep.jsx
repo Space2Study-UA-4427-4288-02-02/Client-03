@@ -4,12 +4,18 @@ import { useTranslation } from 'react-i18next'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import DoneIcon from '@mui/icons-material/Done'
 import { style } from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep.style'
-import { translationKey } from 'containers/tutor-home-page/add-photo-step/constants'
+import {
+  translationKey,
+  validationData
+} from 'containers/tutor-home-page/add-photo-step/constants'
 import { useStepContext } from '~/context/step-context'
+import { useSnackBarContext } from '~/context/snackbar-context'
+import { snackbarVariants } from '~/constants'
 
 const AddPhotoStep = ({ btnsBox }) => {
   const { stepData, handleStepData } = useStepContext()
   const data = stepData['photo']
+  const { setAlert } = useSnackBarContext()
   useEffect(() => {
     if (data) setPreview(URL.createObjectURL(data))
   }, [data])
@@ -18,23 +24,32 @@ const AddPhotoStep = ({ btnsBox }) => {
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef(null)
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
+  const handleFileChange = (file) => {
+    if (!file) return
+
+    try {
+      validatePhoto(file)
       const previewUrl = URL.createObjectURL(file)
       setPreview(previewUrl)
       handleStepData('photo', file)
+    } catch (e) {
+      setAlert({
+        severity: snackbarVariants.error,
+        message: e.message
+      })
     }
+  }
+
+  const handleInputChange = (e) => {
+    const file = e.target.files[0]
+    handleFileChange(file)
   }
 
   const handleDrop = (e) => {
     e.preventDefault()
     setIsDragging(false)
     const file = e.dataTransfer.files[0]
-    if (file) {
-      const previewUrl = URL.createObjectURL(file)
-      setPreview(previewUrl)
-    }
+    handleFileChange(file)
   }
 
   const handleDragOver = (e) => {
@@ -45,12 +60,21 @@ const AddPhotoStep = ({ btnsBox }) => {
   const handleDragLeave = () => {
     setIsDragging(false)
   }
+  const validatePhoto = (file) => {
+    if (!validationData.filesTypes.includes(file.type)) {
+      throw new Error(t(validationData.typeError))
+    }
+
+    if (file.size > validationData.maxFileSize) {
+      throw new Error(t(validationData.fileSizeError))
+    }
+  }
   return (
     <Box sx={style.root}>
       <input
         accept='image/*'
         hidden
-        onChange={handleFileChange}
+        onChange={handleInputChange}
         ref={fileInputRef}
         type='file'
       />
