@@ -37,7 +37,7 @@ const AppRatingMobile: FC<AppRatingMobileProps> = ({
           sx={spliceSx(styles.starMobile, sx?.starMobile)}
         />
         <Typography sx={spliceSx(styles.rating, sx?.rating)}>
-          {value}
+          {value.toFixed(1)}
         </Typography>
       </Box>
       <Typography
