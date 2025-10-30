@@ -36,6 +36,19 @@ export interface Offer extends CommonEntityFields {
   status: StatusEnum
 }
 
+export interface allOfferInfo {
+  authorName: string
+  reviewsQuantity: number
+  offerTitle: string
+  offerDescription: string
+  proficiencyLevel: ProficiencyLevelEnum[]
+  languages: LanguagesEnum[]
+  profilePicture: string
+  subject: string
+  price: number
+  totalRating: number
+}
+
 export interface ButtonActions {
   label: string
   buttonProps?: ButtonProps<'button', { to?: string }>

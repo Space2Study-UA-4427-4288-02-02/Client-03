@@ -37,14 +37,14 @@ const AppRatingMobile: FC<AppRatingMobileProps> = ({
           sx={spliceSx(styles.starMobile, sx?.starMobile)}
         />
         <Typography sx={spliceSx(styles.rating, sx?.rating)}>
-          {value}
+          {value?.toFixed(1)}
         </Typography>
       </Box>
       <Typography
         component={link ? HashLink : Typography}
         sx={spliceSx(styles.reviews, sx?.reviews)}
       >
-        {t('tutorProfilePage.reviews.reviewsCount', {
+        {t('tutorProfilePage.profileInfo.reviews', {
           count: reviewsCount
         })}
       </Typography>

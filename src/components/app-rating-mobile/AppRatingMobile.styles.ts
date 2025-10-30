@@ -3,7 +3,7 @@ import { TypographyVariantEnum } from '~/types'
 export const styles = {
   root: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     flexDirection: 'column',
     columnGap: '4px',
     borderRadius: '5px'
@@ -14,9 +14,12 @@ export const styles = {
   },
   number: { display: 'flex', alignItems: 'center' },
   rating: {
-    typography: TypographyVariantEnum.H6
+    fontSize: '16px',
+    lineHeight: '20px',
+    fontWeight: 400,
+    letterSpacing: '0.5px '
   },
   reviews: {
-    typography: TypographyVariantEnum.Caption
+    typography: TypographyVariantEnum.Overline
   }
 }
