@@ -18,6 +18,11 @@ export const myProfile = {
   path: authRoutes.accountMenu.myProfile.route
 }
 
+export const editProfile = {
+  name: t('breadCrumbs.editProfile'),
+  path: authRoutes.editProfile.route
+}
+
 export const categories = {
   name: t('breadCrumbs.categories'),
   path: authRoutes.categories.route
