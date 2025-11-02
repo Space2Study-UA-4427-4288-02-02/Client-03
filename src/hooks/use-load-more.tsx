@@ -16,6 +16,7 @@ const useLoadMore = <Data, Params>({
   limit,
   params
 }: UseLoadMoreProps<Data, Params>) => {
+  const searchName = (params as any)?.name?.trim?.().toLowerCase?.() || ''
   const [skip, setSkip] = useState<number>(0)
   const [data, setData] = useState<Data[]>([])
   const [previousLimit, setPreviousLimit] = useState<number>(limit)
@@ -27,9 +28,22 @@ const useLoadMore = <Data, Params>({
     [limit]
   )
 
-  const handleResponse = useCallback((responseData: ItemsWithCount<Data>) => {
-    setData((prevState) => [...prevState, ...responseData.items])
-  }, [])
+  const handleResponse = useCallback(
+    (responseData: ItemsWithCount<Data>) => {
+      setData((prevState) => {
+        if (searchName) {
+          const found = responseData.find(
+            (item: any) => item.name?.toLowerCase() === searchName
+          )
+          return found ? [found] : []
+        }
+        const startIndex = prevState.length
+        const endIndex = startIndex + limit
+        return [...prevState, ...responseData.slice(startIndex, endIndex)]
+      })
+    },
+    [params, limit]
+  )
 
   const resetData = useCallback(() => {
     setSkip(0)
@@ -60,10 +74,12 @@ const useLoadMore = <Data, Params>({
     }
   }, [fetchData, limit, previousLimit, resetData, skip, params])
 
-  const isExpandable = useMemo(
-    () => data.length < response.count && data.length > 0,
-    [data, response]
-  )
+  const isExpandable = useMemo(() => {
+    if (searchName) {
+      return false
+    }
+    return data.length < response.length && data.length > 0
+  }, [data, response])
 
   return {
     data,

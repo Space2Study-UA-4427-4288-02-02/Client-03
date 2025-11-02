@@ -7,7 +7,7 @@ import { style } from '~/containers/tutor-home-page/add-photo-step/AddPhotoStep.
 import {
   translationKey,
   validationData
-} from 'containers/tutor-home-page/add-photo-step/constants'
+} from '~/containers/tutor-home-page/add-photo-step/constants'
 import { useStepContext } from '~/context/step-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
 import { snackbarVariants } from '~/constants'
