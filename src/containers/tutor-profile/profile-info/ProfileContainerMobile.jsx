@@ -6,6 +6,7 @@ import Avatar from '@mui/material/Avatar'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import AppChipList from '~/components/app-chips-list/AppChipList'
 import ProfileDoneItemsList from '~/components/icon-with-text-list/ProfileDoneItemsList'
+import { useAppSelector } from '~/hooks/use-redux'
 
 import { styles } from '~/containers/tutor-profile/profile-info/ProfileInfo.styles'
 
@@ -18,15 +19,20 @@ const ProfileContainerMobile = ({
   userData,
   chipItems
 }) => {
+
+  const { photo } = useAppSelector((state) => state.appMain)
+  
+  const getPhotoUrl = () => {
+    if (photo) return photo
+    return userData.photo
+  }
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.wrapperForPhoto}>
         <Box sx={styles.avatarContainerMobile}>
           <Avatar
-            src={
-              userData.photo &&
-              `${import.meta.env.VITE_APP_IMG_USER_URL}${userData.photo}`
-            }
+            src={getPhotoUrl()}
             sx={styles.img}
           />
         </Box>

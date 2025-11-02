@@ -7,7 +7,7 @@ import { useModalContext } from '~/context/modal-context'
 import { useStepContext } from '~/context/step-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
 import { userService } from '~/services/user-service'
-import uploadImage from '~/services/upload-photo'
+import uploadImage from '~/services/photo-service'
 import { snackbarVariants } from '~/constants'
 
 const useSteps = ({ steps }) => {

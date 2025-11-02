@@ -5,8 +5,9 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import AppTextField from '~/components/app-text-field/AppTextField'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { authRoutes } from '~/router/constants/authRoutes'
@@ -14,22 +15,31 @@ import { styles } from './EditProfile.styles'
 import { useAppSelector } from '~/hooks/use-redux'
 import { userService } from '~/services/user-service'
 import useAxios from '~/hooks/use-axios'
+import { validationData } from 'containers/tutor-home-page/add-photo-step/constants'
+import { snackbarVariants } from '~/constants'
+import { useSnackBarContext } from '~/context/snackbar-context'
+import uploadImage, { getImageUrl, deleteImage } from '~/services/photo-service'
 
 const EditProfile = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const { setAlert } = useSnackBarContext()
+
+  const fileInputRef = useRef(null)
+  const [photoUrl, setPhotoUrl] = useState(undefined)
+  const [isPhotoChanging, setIsPhotoChanging] = useState(false)
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [errors, setErrors] = useState({ firstName: '', lastName: '' })
-  const { userId, userRole } = useAppSelector((state) => state.appMain)
+  const { userId, userRole, photo } = useAppSelector((state) => state.appMain)
 
   const getUserData = useCallback(
-    () => userService.getUserById(userId, userRole as any),
+    () => userService.getUserById(userId, userRole),
     [userId, userRole]
   )
 
-  const { loading: userLoading, response: userResponse, fetchData } = useAxios<any>({
+  const { loading: userLoading, response: userResponse, fetchData } = useAxios({
     service: getUserData,
     fetchOnMount: false,
     defaultResponse: null
@@ -37,7 +47,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (userId && userRole) {
-      void fetchData()
+      fetchData()
     }
   }, [userId, userRole, fetchData])
 
@@ -67,6 +77,7 @@ const EditProfile = () => {
     if (userResponse) {
       setFirstName(userResponse.firstName ?? '')
       setLastName(userResponse.lastName ?? '')
+      setPhotoUrl(userResponse.photo)
     }
   }, [userResponse])
 
@@ -83,10 +94,66 @@ const EditProfile = () => {
     }
   }, [userResponse])
 
-  const handleHeadlineChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleHeadlineChange = (e) => {
     const value = e.target.value
     if (value.length <= maxHeadlineLength) setHeadline(value)
     else setHeadline(value.slice(0, maxHeadlineLength))
+  }
+
+  const handleInputChange = (e) => {
+    const file = e.target.files[0]
+    if (isPhotoChanging) return
+    handlePhotoChange(file)
+    e.target.value = ''
+  }
+
+  const handlePhotoChange = async (file) => {
+    if (!file) return
+
+    try {
+      validatePhoto(file)
+      setIsPhotoChanging(true)
+      await uploadImage(file, userId)
+      const url = await getImageUrl(userId)
+      setPhotoUrl(url)
+      setIsPhotoChanging(false)
+    } catch (e) {
+      console.log(e)
+      setIsPhotoChanging(false)
+      setAlert({
+        severity: snackbarVariants.error,
+        message: e.message
+      })
+    }
+  }
+
+  const validatePhoto = (file) => {
+    if (!validationData.filesTypes.includes(file.type)) {
+      throw new Error(t(validationData.typeError))
+    }
+
+    if (file.size > validationData.maxFileSize) {
+      throw new Error(t(validationData.fileSizeError))
+    }
+  }
+
+  const handleRemovePhoto = async () => {
+    if (isPhotoChanging) return
+    try {
+      setIsPhotoChanging(true)
+      await deleteImage(userId)
+        const url = await getImageUrl(userId)
+        setPhotoUrl(url)
+        if (!url) {
+          setAlert({ severity: snackbarVariants.success, message: 'Photo Delete' })
+        } else {
+          setAlert({ severity: snackbarVariants.error, message: 'Failed to delete photo' })
+        }
+        setIsPhotoChanging(false)
+    } catch (fetchErr) {
+      setAlert({ severity: snackbarVariants.error, message: 'Failed to delete photo' })
+      setIsPhotoChanging(false)
+    }
   }
 
   return (
@@ -109,7 +176,7 @@ const EditProfile = () => {
         </Box>
         <Divider sx={{ my: 1 }} />
 
-        <Box>
+        <Box sx={{maxWidth: { xs: '100%', md: '600px', lg: '800px' }}}>
           <Box component='section' sx={{ mt: 1 }}>
             <Typography variant='h5' sx={{ mb: 1 }}>
               Profile
@@ -119,17 +186,32 @@ const EditProfile = () => {
             </Typography>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems='center'>
-              <Avatar src={userResponse?.photo} sx={{ width: 96, height: 96 }}>
-                {!userResponse?.photo && initials ? initials : null}
-              </Avatar>
+              {isPhotoChanging ? (
+                <Box sx={{ width: 96, height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <CircularProgress size={28} />
+                </Box>
+              ) : (
+                <Avatar src={photoUrl} sx={{ width: 96, height: 96 }}>
+                  {!photoUrl && initials ? initials : null}
+                </Avatar>
+              )}
 
               <Box>
                 <Typography variant='subtitle1' sx={{ mb: 1 }}>
                   Upload new photo
                 </Typography>
                 <Stack direction='row' spacing={1}>
-                  <Button variant='contained'>Upload new photo</Button>
-                  <Button variant='outlined'>Remove</Button>
+                  <input
+                    accept='image/*'
+                    hidden
+                    onChange={handleInputChange}
+                    ref={fileInputRef}
+                    type='file'
+                  />
+                  <Button variant='contained' onClick={() => fileInputRef.current?.click()}>
+                    Upload new photo
+                  </Button>
+                  <Button variant='outlined' onClick={handleRemovePhoto}>Remove</Button>
                 </Stack>
               </Box>
             </Stack>
@@ -143,7 +225,6 @@ const EditProfile = () => {
               Your name may appear around Spase2Study when mentioned.
             </Typography>
 
-            {/* Name fields row */}
             <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
               <AppTextField
                 required
@@ -169,7 +250,6 @@ const EditProfile = () => {
             </Box>
           </Box>
 
-          {/* Professional Headline */}
           <Box component='section' sx={{ mt: 1 }}>
             <Typography variant='subtitle1' sx={{ mb: 1 }}>
               Professional Headline

@@ -1,4 +1,4 @@
-import { useState, useRef, FC } from 'react'
+import { useState, useRef, useEffect, FC } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -12,13 +12,14 @@ import Avatar from '@mui/material/Avatar'
 import { userService } from '~/services/user-service'
 import useAxios from '~/hooks/use-axios'
 
+
 interface UserIconsProps {
   setSidebarOpen: () => void
 }
 
 const UserIcons: FC<UserIconsProps> = ({ setSidebarOpen }) => {
 
-    const { userId, userRole } = useAppSelector((state) => state.appMain)
+    const { userId, userRole, photo } = useAppSelector((state) => state.appMain)
   
     const getUserData = useCallback(
       () => userService.getUserById(userId, userRole),
@@ -52,19 +53,30 @@ const UserIcons: FC<UserIconsProps> = ({ setSidebarOpen }) => {
             openNotifications,
             setSidebarOpen
           })}
-          icon={getUserIcon(response) ?? item.icon}
+          icon={getUserIcon()}
           key={item.tooltip}
           tooltip={t(item.tooltip)}
         />
       )
   )
 
-  function getUserIcon(user?: User) {
-    if (!user) return null
-    if (user.photo) return user.photo
+  function getUserIcon() {
+    if (photo) {
+      return  <Avatar
+        src={photo}
+        sx={{ width: 24, height: 24, fontSize: 12, fontWeight: 500 }}
+      />
+    }
+    if (!response) return null
+    if (response.photo) {
+      return <Avatar
+        src={response.photo}
+        sx={{ width: 24, height: 24, fontSize: 12, fontWeight: 500 }}
+      />
+    }
 
-    const first = user.firstName ? user.firstName.trim().charAt(0).toUpperCase() : ''
-    const last = user.lastName ? user.lastName.trim().charAt(0).toUpperCase() : ''
+    const first = response.firstName ? response.firstName.trim().charAt(0).toUpperCase() : ''
+    const last = response.lastName ? response.lastName.trim().charAt(0).toUpperCase() : ''
     const initials = `${first}${last}`.trim()
     if (!initials) return null
 
