@@ -1,4 +1,4 @@
-import { useMatch } from 'react-router-dom'
+import { useMatch, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -42,11 +42,12 @@ const ProfileInfo = ({ userData }) => {
     <CopyRoundedIcon color='primary' fontSize='small' />
   )
 
+  const navigate = useNavigate()
+
   const actionIconBtn = (
     <IconButton
       data-testid='icon-btn'
-      href={isMyProfile}
-      onClick={!isMyProfile ? copyProfileLink : undefined}
+      onClick={isMyProfile ? () => navigate(authRoutes.editProfile.path) : copyProfileLink}
       size={isLaptopAndAbove ? SizeEnum.Large : SizeEnum.Small}
       sx={styles.iconBtn}
     >

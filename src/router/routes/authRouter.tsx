@@ -10,11 +10,13 @@ import {
   userProfile,
   newQuestion,
   editQuestion,
-  findOffers
+  findOffers,
+  editProfile
 } from '~/router/constants/crumbs'
 import PrivateRoute from '~/router/helpers/PrivateRoute'
 import { UserRoleEnum } from '~/types'
 import { userProfileLoader } from '../constants/loaders'
+import EditProfile from '~/pages/edit-profile/EditProfile'
 
 const Categories = lazy(() => import('~/pages/categories/Categories'))
 const Subjects = lazy(() => import('~/pages/subjects/Subjects'))
@@ -70,6 +72,11 @@ export const authRouter = (
       element={<CreateOrEditQuestion />}
       handle={{ crumb: [myResources, editQuestion] }}
       path={authRoutes.myResources.editQuestion.route}
+    />
+    <Route
+      element={<EditProfile />}
+      handle={{ crumb: editProfile }}
+      path={authRoutes.editProfile.route}
     />
   </Route>
 )

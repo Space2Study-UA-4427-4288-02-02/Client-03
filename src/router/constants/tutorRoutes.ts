@@ -15,6 +15,10 @@ export const tutorRoutes = {
     myResources: {
       route: 'my-resources',
       path: authRoutes.myResources.root.path
-    }
+    },
+  },
+  edit_profile: {
+    route: authRoutes.editProfile.route,
+    path: authRoutes.editProfile.path
   }
 }

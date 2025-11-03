@@ -18,6 +18,7 @@ interface UserState {
   isFirstLogin: boolean
   loading: boolean
   pageLoad: boolean
+  photo: string | null
 }
 
 const initialState: UserState = {
@@ -27,7 +28,8 @@ const initialState: UserState = {
   loading: true,
   pageLoad: false,
   error: '',
-  isFirstLogin: true
+  isFirstLogin: true,
+  photo: null
 }
 
 export const checkAuth = createAsyncThunk(
@@ -65,6 +67,10 @@ export const mainSlice = createSlice({
       state.userId = userData.id
       state.userRole = userData.role
       state.isFirstLogin = userData.isFirstLogin
+    },
+    setPhoto(state, action: PayloadAction<string | null>) {
+      console.log(action, "in reducer")
+      state.photo = action.payload
     },
     logout(state) {
       state.userId = initialState.userId
@@ -117,7 +123,7 @@ export const mainSlice = createSlice({
 
 const { actions, reducer } = mainSlice
 
-export const { setUser, logout, markFirstLoginComplete, setPageLoading } =
+export const { setUser, logout, markFirstLoginComplete, setPageLoading, setPhoto } =
   actions
 
 export default reducer
