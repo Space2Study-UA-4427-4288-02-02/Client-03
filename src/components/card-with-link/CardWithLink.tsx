@@ -7,21 +7,33 @@ import TitleWithDescription from '~/components/title-with-description/TitleWithD
 import { styles } from '~/components/card-with-link/CardWithLink.styles'
 
 interface CardWithLinkProps {
-  img: string
+  img: React.FC<React.SVGProps<SVGSVGElement>> | string
   title: string
   description: string
   link: string
+  color: string
 }
 
 const CardWithLink: FC<CardWithLinkProps> = ({
   img,
   title,
   description,
-  link
+  link,
+  color
 }) => {
+  const isString = typeof img === 'string'
   return (
     <AppCard link={link}>
-      <Box alt='item image' component='img' src={img} sx={styles.img} />
+      {isString ? (
+        <Box alt='item image' component='img' src={img} sx={styles.img} />
+      ) : (
+        <Box sx={styles.img}>
+          {(() => {
+            const SvgComponent = img as React.FC<React.SVGProps<SVGSVGElement>>
+            return <SvgComponent width='100%' height='100%' fill={color} />
+          })()}
+        </Box>
+      )}
       <TitleWithDescription
         description={description}
         style={styles.titleWithDescription}

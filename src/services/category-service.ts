@@ -10,11 +10,11 @@ import {
 } from '~/types'
 
 export const categoryService = {
-  getCategories: (
-    params?: Partial<CategoriesParams>
-  ): Promise<AxiosResponse<ItemsWithCount<CategoryInterface>>> => {
-    return axiosClient.get(URLs.categories.get, { params })
-  },
+  getCategories: async (
+  params?: Partial<CategoriesParams>
+): Promise<ItemsWithCount<CategoryInterface>> => {
+  return axiosClient.get<CategoryInterface[]>(URLs.categories.get, { params })
+},
   getCategoriesNames: (): Promise<AxiosResponse<CategoryNameInterface[]>> => {
     return axiosClient.get(URLs.categories.getNames)
   }
