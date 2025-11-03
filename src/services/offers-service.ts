@@ -8,8 +8,10 @@ import { createUrlPath } from '~/utils/helper-functions'
 const urlsWithType = URLs as { offers: { get: string; getById: string } }
 
 export const offerService = {
-  getOffers: (): Promise<AxiosResponse<ItemsWithCount<Offer>>> => {
-    return axiosClient.get(`${urlsWithType.offers.get}`)
+  getOffers: (
+    params?: Record<string, string | number>
+  ): Promise<AxiosResponse<ItemsWithCount<Offer>>> => {
+    return axiosClient.get(urlsWithType.offers.get, { params })
   },
 
   getOfferById: (id: string): Promise<AxiosResponse<Offer>> => {
