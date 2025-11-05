@@ -104,6 +104,13 @@ const Navbar = () => {
     <Box sx={styles.header}>
       <Button
         component={Link}
+        onClick={(e) => {
+          if (pathname === guestRoutes.home.path) {
+            e.preventDefault()
+            const el = document.getElementById('welcome')
+            el?.scrollIntoView({ behavior: 'smooth' })
+          }
+        }}
         size={SizeEnum.Small}
         sx={styles.logoButton}
         to={guestRoutes.home.path}
